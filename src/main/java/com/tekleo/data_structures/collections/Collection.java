@@ -1,6 +1,8 @@
 package com.tekleo.data_structures.collections;
 
 /**
+ * General representation of collection
+ *
  * @author Leo Ertuna
  * @since 26.01.2018 17:30
  */
@@ -9,6 +11,7 @@ public interface Collection<Data> extends CollectionImmutable<Data> {
     //------------------------------------------------------------------------------------------------------------------
     /**
      * Add new object to this collection
+     * Try to implement it so that it runs O(n) in worst case and O(1) in general
      * @param data object to be added
      * @return added object
      */
@@ -16,6 +19,7 @@ public interface Collection<Data> extends CollectionImmutable<Data> {
 
     /**
      * Add all objects from a given collection to this collection
+     * Runs in O(n * m) worst case, should be O(m) in general
      * @param collection objects to add
      * @return added collection
      * @see #add(Object)
@@ -28,6 +32,7 @@ public interface Collection<Data> extends CollectionImmutable<Data> {
 
     /**
      * Add all objects from a given array to this collection
+     * Runs in O(n * m) worst case, should be O(m) in general
      * @param array objects to add
      * @return added array
      * @see #add(Object)
@@ -45,37 +50,41 @@ public interface Collection<Data> extends CollectionImmutable<Data> {
     //------------------------------------------------------------------------------------------------------------------
     /**
      * Remove all items from this collection
+     * Try to implement it so that it runs O(n)
      */
     void clear();
 
     /**
-     * Remove a given object from this collection
+     * Remove all occurrences of a given object from this collection
+     * Try to implement it so that it runs O(n) in worst case
      * @param data object to be removed
      * @return removed object
      */
-    Data remove(Data data);
+    Data removeAll(Data data);
 
     /**
-     * Removes all object of a given collection from this collection
+     * Remove all occurrences of all objects of a given collection from this collection
+     * Runs in O(n * m)
      * @param collection objects to be removed
      * @return removed collection
-     * @see #remove(Object)
+     * @see #removeAll(Object)
      */
     default Collection<? extends Data> removeAll(Collection<? extends Data> collection) {
         for (Data data : collection)
-            this.remove(data);
+            this.removeAll(data);
         return collection;
     }
 
     /**
-     * Removes all object of a given array from this collection
+     * Remove all occurrences of all objects of a given array from this collection
+     * Runs in O(n * m)
      * @param array objects to be removed
      * @return removed array
-     * @see #remove(Object)
+     * @see #removeAll(Object)
      */
     default Data[] removeAll(Data[] array) {
         for (Data data : array)
-            this.remove(data);
+            this.removeAll(data);
         return array;
     }
     //------------------------------------------------------------------------------------------------------------------

@@ -1,9 +1,20 @@
 package com.tekleo.data_structures;
 
+import com.tekleo.data_structures.collections.lists.linked_lists.SinglyLinkedList;
+
 public class Main {
     public static void main(String[] args) {
-        MyCollection<String> s = new MyCollection<>("hello");
+        SinglyLinkedList<String> s = new SinglyLinkedList<>();
+        s.add("one");
+        s.add("two");
+        s.add("three");
 
-        System.out.println(s.toArray()[0]);
+        s.add(0, "hello");
+        s.add(3, "last");
+
+        System.out.println(s.size());
+        for (String str : s) {
+            System.out.println(str);
+        }
     }
 }

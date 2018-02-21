@@ -7,11 +7,23 @@ import com.tekleo.data_structures.utils.Iterable;
 import java.lang.reflect.Array;
 import java.util.stream.Stream;
 
+/**
+ * This interface presents core functionality of a collection
+ *
+ * We keep the collection immutable for this interface
+ *
+ * Methods implemented here rely heavily on {@link com.tekleo.data_structures.utils.Iterator} implementation
+ *
+ * @param <Data> generic parameter
+ * @author Leo Ertuna
+ * @since 16.02.2018 13:37
+ */
 public interface CollectionImmutable<Data> extends Iterable<Data>, Immutable {
-    // Contains
+    // Contains, All, Any
     //------------------------------------------------------------------------------------------------------------------
     /**
      * Does this collection contain a given object?
+     * Runs in O(n)
      * @param data object to be searched for
      * @return true if this object is in this collection, false otherwise
      */
@@ -24,6 +36,7 @@ public interface CollectionImmutable<Data> extends Iterable<Data>, Immutable {
 
     /**
      * Does this collection contain all objects from a given collection
+     * Runs in O(n * m)
      * @param collection objects to be searched for
      * @return true if all the objects are in this collection, false otherwise
      * @see #contains(Object)
@@ -36,7 +49,8 @@ public interface CollectionImmutable<Data> extends Iterable<Data>, Immutable {
     }
 
     /**
-     * Does this collection contain all objects from a given collection
+     * Does this collection contain all objects from a given array
+     * Runs in O(n * m)
      * @param array objects to be searched for
      * @return true if all the objects are in this collection, false otherwise
      * @see #contains(Object)
@@ -46,6 +60,34 @@ public interface CollectionImmutable<Data> extends Iterable<Data>, Immutable {
             if (!this.contains(data))
                 return false;
         return true;
+    }
+
+    /**
+     * Does this collection contain any single object from a given collection
+     * Runs in O(n * m) worst case, but for general case it should be much better
+     * @param collection objects to be searched for
+     * @return true if any of the objects are in this collection, false otherwise
+     * @see #contains(Object)
+     */
+    default boolean containsAny(Collection<? extends Data> collection) {
+        for (Data data : collection)
+            if (this.contains(data))
+                return true;
+        return false;
+    }
+
+    /**
+     * Does this collection contain any single object from a given array
+     * Runs in O(n * m) worst case, but for general case it should be much better
+     * @param array objects to be searched for
+     * @return true if any of the objects are in this collection, false otherwise
+     * @see #contains(Object)
+     */
+    default boolean containsAny(Data[] array) {
+        for (Data data : array)
+            if (this.contains(data))
+                return true;
+        return false;
     }
     //------------------------------------------------------------------------------------------------------------------
 
@@ -57,7 +99,12 @@ public interface CollectionImmutable<Data> extends Iterable<Data>, Immutable {
      * Retrieve a random element of this collection
      *
      * This method is extremely useful for providing us with the ability to use default implementation for many methods
+     *
      * It is used in {@link #min(Comparator)}, {@link #max(Comparator)}, {@link #toArray()}
+     *
+     * Try to implement it in a way that it runs in O(1), but most likely it will run in O(n)
+     *
+     * This should not be truly random
      *
      * @return an element of this collection picked randomly
      */
@@ -68,6 +115,12 @@ public interface CollectionImmutable<Data> extends Iterable<Data>, Immutable {
 
     // Min-Max elements
     //------------------------------------------------------------------------------------------------------------------
+    /**
+     * Get smallest element in this collection
+     * Runs in O(n)
+     * @param comparator comparator of {@link Data} objects
+     * @return minimum element
+     */
     default Data min(Comparator<Data> comparator) {
         // Get a random element as current min
         Data min = this.getRandom();
@@ -83,6 +136,12 @@ public interface CollectionImmutable<Data> extends Iterable<Data>, Immutable {
         return min;
     }
 
+    /**
+     * Get largest element in this collection
+     * Runs in O(n)
+     * @param comparator comparator of {@link Data} objects
+     * @return maximum element
+     */
     default Data max(Comparator<Data> comparator) {
         // Get a random element as current max
         Data max = this.getRandom();
@@ -106,12 +165,14 @@ public interface CollectionImmutable<Data> extends Iterable<Data>, Immutable {
     //------------------------------------------------------------------------------------------------------------------
     /**
      * Get the size of this collection
+     * Runs in O(1)
      * @return number of elements in this collection
      */
     int size();
 
     /**
      * Hom many instances of a given object this collection contains?
+     * Runs in O(n)
      * @param data object to be counted
      * @return number of occurrences of a given object
      */
@@ -125,6 +186,7 @@ public interface CollectionImmutable<Data> extends Iterable<Data>, Immutable {
 
     /**
      * Is this collection empty?
+     * Runs in O(1)
      * @return true if it is, false otherwise
      * @see #size()
      */
@@ -135,10 +197,11 @@ public interface CollectionImmutable<Data> extends Iterable<Data>, Immutable {
 
 
 
-    // Reflections
+    // Array/Streams
     //------------------------------------------------------------------------------------------------------------------
     /**
      * Get array from this collection
+     * Runs in O(n)
      * @return array
      */
     default Data[] toArray() {
@@ -149,29 +212,30 @@ public interface CollectionImmutable<Data> extends Iterable<Data>, Immutable {
         int i = 0;
         for (Data data : this)
             array[i++] = data;
+
+        // Return resulting array
         return array;
     }
-    //------------------------------------------------------------------------------------------------------------------
 
-
-
-    // Streams
-    //------------------------------------------------------------------------------------------------------------------
     /**
      * Get a stream from this collection
+     * Runs in O(n) probably, depends on Java's implementation of Stream
      * @return stream
      * @see #toArray
      */
     default Stream<Data> toStream() {
+        // Get default stream of array
         return Stream.of(toArray());
     }
 
     /**
      * Get a parallel stream from this collection
+     * Runs in O(n) probably, depends on Java's implementation of Stream and ParallelStream
      * @return parallel stream
      * @see #toStream()
      */
     default Stream<Data> toParallelStream() {
+        // Get parallel stream from default stream
         return toStream().parallel();
     }
     //------------------------------------------------------------------------------------------------------------------

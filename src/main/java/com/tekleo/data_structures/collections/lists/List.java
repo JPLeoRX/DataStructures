@@ -1,6 +1,7 @@
 package com.tekleo.data_structures.collections.lists;
 
 import com.tekleo.data_structures.collections.Collection;
+import com.tekleo.data_structures.utils.Comparator;
 
 /**
  * @author Leo Ertuna
@@ -9,19 +10,19 @@ import com.tekleo.data_structures.collections.Collection;
 public interface List<Data> extends Collection<Data>, ListImmutable<Data> {
     // Adding
     //------------------------------------------------------------------------------------------------------------------
-    Data addFirst(Data data);
-
-    Data addLast(Data data);
-
     Data add(int index, Data data);
+
+    default Data addFirst(Data data) {
+        return add(0, data);
+    }
+
+    default Data addLast(Data data) {
+        return add(this.size(), data);
+    }
 
     @Override
     default Data add(Data data) {
         return addLast(data);
-    }
-
-    default Data set(int index, Data data) {
-        return replaceAtIndex(index, data);
     }
     //------------------------------------------------------------------------------------------------------------------
 
@@ -29,18 +30,16 @@ public interface List<Data> extends Collection<Data>, ListImmutable<Data> {
 
     // Removing
     //------------------------------------------------------------------------------------------------------------------
-    Data removeFirst();
+    Data remove(int index);
 
-    Data removeLast();
+    default Data removeFirst() {
+        return remove(0);
+    }
 
-    @Override
-    default Data remove(Data data) {
-        return removeFirst();
+    default Data removeLast() {
+        return remove(this.size() - 1);
     }
     //------------------------------------------------------------------------------------------------------------------
-
-
-
 
 
 
@@ -59,7 +58,7 @@ public interface List<Data> extends Collection<Data>, ListImmutable<Data> {
     }
     //------------------------------------------------------------------------------------------------------------------
 
-    void sort();
+    void sort(Comparator<Data> comparator);
 
     void reverse();
 
