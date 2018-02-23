@@ -89,6 +89,22 @@ public interface CollectionImmutable<Data> extends Iterable<Data>, Immutable {
                 return true;
         return false;
     }
+
+    /**
+     * Does this collection contain only unique (not-repeating) elements
+     * Meaning each item in the collection occurs only once
+     * Runs in O(n * n)
+     * Can be overriden to O(1) by specific classes that contain only unique elements by definition
+     * TODO improve it to O(n) using hash-map or hash-set in the future
+     * @return true if it is unique, false if it's not
+     * @see #count(Object)
+     */
+    default boolean containsOnlyUniqueElements() {
+        for (Data data : this)
+            if (this.count(data) > 1)
+                return false;
+        return true;
+    }
     //------------------------------------------------------------------------------------------------------------------
 
 
