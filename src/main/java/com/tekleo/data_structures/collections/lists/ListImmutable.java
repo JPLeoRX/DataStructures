@@ -49,6 +49,12 @@ public interface ListImmutable<Data> extends CollectionImmutable<Data>, Immutabl
         return get(this.size() - 1);
     }
 
+    /**
+     * Retrieve a random element of this collection
+     * Runs in O(n) or O(1) depending on the implementation of {@link #get(int)}
+     * @return an element of this collection picked randomly
+     * @see #get(int)
+     */
     @Override
     default Data getRandom() {
         // Create a new random
@@ -68,27 +74,39 @@ public interface ListImmutable<Data> extends CollectionImmutable<Data>, Immutabl
     //------------------------------------------------------------------------------------------------------------------
     /**
      * Find indexes of all occurrences of a given object
-     * Runs in O(n)
+     * Runs in O(n), although, technically, it is 2 * O(n)
      * @param data object to find
      * @return array of indexes of all its occurrences
      */
     default int[] findAllIndexes(Data data) {
-        // Create new array to store indexes
-        int[] indexes = new int[this.size()];
+        // Count how many occurrences of the given object are in this list
+        int occurrences = this.count(data);
 
-        // For each element in this collection
-        for (int i = 0, j = 0; i < this.size(); i++)
-            // If the element is found
-            if (this.get(i).equals(data))
-                // Store its index
-                indexes[j++] = i;
+        // Check if it's zero - we need to exit right now and return empty array
+        if (occurrences == 0) {
+            return new int[]{};
+        }
 
-        return indexes;
+        // If we indeed have some occurrences - pass through the list for a second time
+        else {
+            // Create new array to store indexes
+            int[] indexes = new int[occurrences];
+
+            // For each element in this collection
+            for (int i = 0, j = 0; i < this.size(); i++)
+                // If the element is found
+                if (this.get(i).equals(data))
+                    // Store its index
+                    indexes[j++] = i;
+
+            // Return resulting indexes
+            return indexes;
+        }
     }
 
     /**
      * Find the index of first occurrence of a given object
-     * Runs in O(n)
+     * Runs in O(n), but technically it is 2 * O(n)
      * @param data object to find
      * @return index of first occurrence of given object, or -1
      * @see #findAllIndexes(Object)
@@ -103,7 +121,7 @@ public interface ListImmutable<Data> extends CollectionImmutable<Data>, Immutabl
 
     /**
      * Find the index of last occurrence of a given object
-     * Runs in O(n)
+     * Runs in O(n), but technically it is 2 * O(n)
      * @param data object to find
      * @return index of last occurrence of given object, or -1
      * @see #findAllIndexes(Object)

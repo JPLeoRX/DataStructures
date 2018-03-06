@@ -4,6 +4,8 @@ import com.tekleo.data_structures.collections.Collection;
 import com.tekleo.data_structures.utils.Comparator;
 
 /**
+ * List
+ *
  * @author Leo Ertuna
  * @since 26.01.2018 17:25
  */
@@ -30,12 +32,30 @@ public interface List<Data> extends Collection<Data>, ListImmutable<Data> {
 
     // Removing
     //------------------------------------------------------------------------------------------------------------------
+    /**
+     * Remove the element at a given index from this list
+     * Try to make it run in O(1) or O(n)
+     * @param index index
+     * @return removed element
+     */
     Data remove(int index);
 
+    /**
+     * Remove the first element from this list
+     * Runs in O(n) or O(1) depending on the implementation of {@link #remove(int)}
+     * @return removed element
+     * @see #remove(int)
+     */
     default Data removeFirst() {
         return remove(0);
     }
 
+    /**
+     * Remove the last element from this list
+     * Runs in O(n) or O(1) depending on the implementation of {@link #remove(int)}
+     * @return removed element
+     * @see #remove(int)
+     */
     default Data removeLast() {
         return remove(this.size() - 1);
     }
@@ -45,16 +65,88 @@ public interface List<Data> extends Collection<Data>, ListImmutable<Data> {
 
     // Replacing
     //------------------------------------------------------------------------------------------------------------------
-    Data replaceFirst(Data oldData, Data newData);
-
-    Data replaceLast(Data oldData, Data newData);
-
-    Data replaceAll(Data oldData, Data newData);
-
+    /**
+     * Replace the data at a given index with new value
+     * Try to make in run in O(n) or better
+     * @param index index
+     * @param newData new value
+     * @return new value
+     */
     Data replaceAtIndex(int index, Data newData);
 
+    /**
+     * Replace the first found occurrence of an object with new value
+     * Runs in O(n), but technically it is 3 * O(n)
+     * @param oldData old value
+     * @param newData new value
+     * @return new value
+     * @see #findFirstIndex(Object)
+     * @see #replaceAtIndex(int, Object)
+     */
+    default Data replaceFirst(Data oldData, Data newData) {
+        // Find firs index
+        int firstIndex = this.findFirstIndex(oldData);
+
+        // Replace old data with new data at first index
+        this.replaceAtIndex(firstIndex, newData);
+
+        // Return new data
+        return newData;
+    }
+
+    /**
+     * Replace the last found occurrence of an object with new value
+     * Runs in O(n), but technically it is 3 * O(n)
+     * @param oldData old value
+     * @param newData new value
+     * @return new value
+     * @see #findLastIndex(Object)
+     * @see #replaceAtIndex(int, Object)
+     */
+    default Data replaceLast(Data oldData, Data newData) {
+        // Find last index
+        int lastIndex = this.findLastIndex(oldData);
+
+        // Replace old data with new data at last index
+        this.replaceAtIndex(lastIndex, newData);
+
+        // Return new data
+        return newData;
+    }
+
+    /**
+     * Replace all found occurrences of an object with new value
+     * Runs in O(n * n), but technically it is 2 * O(n) + O(n * n)
+     * @param oldData old value
+     * @param newData new value
+     * @return new value
+     * @see #findAllIndexes(Object) (Object)
+     * @see #replaceAtIndex(int, Object)
+     */
+    default Data replaceAll(Data oldData, Data newData) {
+        // Find all indexes of old data
+        int[] indexes = this.findAllIndexes(oldData);
+
+        // For each index
+        for (int index : indexes)
+            // Replace old data with new data
+            this.replaceAtIndex(index, newData);
+
+        // Return new data
+        return newData;
+    }
+
+    /**
+     * This method exists just for the sake of naming conventions
+     * It just redirects to another method
+     * @param oldData old value
+     * @param newData new value
+     * @return new value
+     * @see #replaceFirst(Object, Object)
+     */
     default Data replace(Data oldData, Data newData) {
-        return replaceFirst(oldData, newData);
+        // Redirect method
+        return this.replaceFirst(oldData, newData);
     }
     //------------------------------------------------------------------------------------------------------------------
 
