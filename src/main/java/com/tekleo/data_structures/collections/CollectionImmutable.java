@@ -221,16 +221,24 @@ public interface CollectionImmutable<Data> extends Iterable<Data>, Immutable {
      * @return array
      */
     default Data[] toArray() {
-        // Create new array
-        Data[] array = (Data[]) Array.newInstance(getRandom().getClass(), this.size());
+        // Check to make sure that #getRandom() method will not return null
+        if (!this.isEmpty()) {
+            // Create new array
+            Data[] array = (Data[]) Array.newInstance(getRandom().getClass(), this.size());
 
-        // Add objects from this collection
-        int i = 0;
-        for (Data data : this)
-            array[i++] = data;
+            // Add objects from this collection
+            int i = 0;
+            for (Data data : this)
+                array[i++] = data;
 
-        // Return resulting array
-        return array;
+            // Return resulting array
+            return array;
+        }
+
+        // Is it is empty, TODO solve the empty case in some other way
+        else {
+            return (Data[]) new Object[]{};
+        }
     }
 
     /**
