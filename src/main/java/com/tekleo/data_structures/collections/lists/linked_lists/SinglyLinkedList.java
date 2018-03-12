@@ -17,6 +17,41 @@ public class SinglyLinkedList<Data> implements List<Data> {
         return currentNode;
     }
 
+    // Collection Immutable
+    //------------------------------------------------------------------------------------------------------------------
+    @Override
+    public int size() {
+        return size;
+    }
+    //------------------------------------------------------------------------------------------------------------------
+
+
+
+    // Collection
+    //------------------------------------------------------------------------------------------------------------------
+    @Override
+    public void clear() {
+        // Reset size
+        this.size = 0;
+
+        // Reset head
+        this.head = null;
+    }
+    //------------------------------------------------------------------------------------------------------------------
+
+
+    // List Immutable
+    //------------------------------------------------------------------------------------------------------------------
+    @Override
+    public Data get(int index) {
+        return this.findNodeAt(index).getData();
+    }
+    //------------------------------------------------------------------------------------------------------------------
+
+
+
+    // List
+    //------------------------------------------------------------------------------------------------------------------
     @Override
     public Data add(int index, Data data) {
         // If we have illegal arguments
@@ -63,7 +98,14 @@ public class SinglyLinkedList<Data> implements List<Data> {
 
     @Override
     public Data replaceAtIndex(int index, Data newData) {
-        return null;
+        // Get node at index
+        NodeSinglyLinked<Data> node = this.findNodeAt(index);
+
+        // Replace value
+        node.setData(newData);
+
+        // Return
+        return newData;
     }
 
     @Override
@@ -80,28 +122,12 @@ public class SinglyLinkedList<Data> implements List<Data> {
     public void shuffle() {
 
     }
+    //------------------------------------------------------------------------------------------------------------------
 
-    @Override
-    public void clear() {
-        this.size = 0;
-        this.head = null;
-    }
 
-    @Override
-    public Data removeAll(Data data) {
-        return null;
-    }
 
-    @Override
-    public Data get(int index) {
-        return null;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
+    // Iterable
+    //------------------------------------------------------------------------------------------------------------------
     @Override
     public Iterator<Data> iterator() {
         return new SinglyLinkedListIterator<>(this);
@@ -112,4 +138,5 @@ public class SinglyLinkedList<Data> implements List<Data> {
             super(list.head);
         }
     }
+    //------------------------------------------------------------------------------------------------------------------
 }
