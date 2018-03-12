@@ -107,21 +107,6 @@ public class SinglyLinkedList<Data> implements List<Data> {
         // Return
         return newData;
     }
-
-    @Override
-    public void sort(Comparator<Data> comparator) {
-
-    }
-
-    @Override
-    public void reverse() {
-
-    }
-
-    @Override
-    public void shuffle() {
-
-    }
     //------------------------------------------------------------------------------------------------------------------
 
 
